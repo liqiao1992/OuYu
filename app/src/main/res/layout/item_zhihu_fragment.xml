@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <ImageView
+            android:src="@mipmap/ic_launcher"
+            android:id="@+id/item_zhihu_fragment_imageview"
+            android:layout_width="80dp"
+            android:layout_alignParentRight="true"
+            android:layout_height="80dp" />
+        <TextView
+            android:text="你好哈jdskljflksjl就快结束了科技发来看手机的开发数据来看开始打飞机了开始就两款发动机大开杀戒了放假打算离开"
+            android:textSize="18sp"
+            android:layout_toLeftOf="@id/item_zhihu_fragment_imageview"
+            android:id="@+id/item_zhihu_framgent_textview"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+    </RelativeLayout>
+
+</android.support.v7.widget.CardView>
