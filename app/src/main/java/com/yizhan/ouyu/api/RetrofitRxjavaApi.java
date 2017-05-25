@@ -1,6 +1,7 @@
 package com.yizhan.ouyu.api;
 
 import com.yizhan.ouyu.app.Constant;
+import com.yizhan.ouyu.entity.DribbbleFollowing;
 import com.yizhan.ouyu.entity.DribbbleShot;
 import com.yizhan.ouyu.entity.DribbbleShotComment;
 import com.yizhan.ouyu.entity.ZhiHuLatestStory;
@@ -38,4 +39,12 @@ public interface RetrofitRxjavaApi {
     @Headers(Constant.DRIBBBLE_CLIENT_AUTH)
     @GET("shots/{id}/comments")
     Observable<List<DribbbleShotComment>> getDribbbleShotComment(@Path("id") int id);
+
+    @Headers(Constant.DRIBBBLE_CLIENT_AUTH)
+    @GET("user/following")
+    Observable<List<DribbbleFollowing>> getDribbbleFollowings(@Query("page") int page,@Query("per_page") int per_page);
+
+    @Headers(Constant.DRIBBBLE_CLIENT_AUTH)
+    @GET("users/{id}/shots")
+    Observable<List<DribbbleShot>> getDribbbleShotByUserId(@Path("id") int id,@Query("page") int page,@Query("per_page") int per_page);
 }

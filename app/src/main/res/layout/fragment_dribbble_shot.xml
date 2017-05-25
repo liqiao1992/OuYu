@@ -16,16 +16,10 @@
             android:layout_height="match_parent" />
     </android.support.v4.widget.SwipeRefreshLayout>
 
-    <LinearLayout
-        android:id="@+id/fragment_dribbble_shot_loading_linearLayout"
+    <FrameLayout
+        android:id="@+id/fragment_dribbble_shot_container_frameLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:gravity="center"
-        android:orientation="vertical"
-        android:visibility="visible">
-        <ProgressBar
-            android:layout_width="100dp"
-            android:layout_height="60dp"
-            android:indeterminateDrawable="@drawable/loading_layout" />
-    </LinearLayout>
+        android:visibility="visible"/>
 </FrameLayout>

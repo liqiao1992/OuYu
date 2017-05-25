@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:paddingBottom="20dp"
+            android:paddingLeft="10dp"
+            android:paddingTop="10dp">
+
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:id="@+id/item_dribbble_following_user_imageView"
+                android:layout_width="80dp"
+                android:layout_height="80dp"
+                android:src="@mipmap/ic_launcher"
+                app:civ_border_color="@android:color/white"
+                app:civ_border_width="2dp" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:orientation="vertical"
+                android:paddingLeft="20dp">
+
+                <TextView
+                    android:id="@+id/item_dribbble_following_user_textView"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:padding="5dp"
+                    android:text="Josn"
+                    android:textSize="20sp" />
+
+                <TextView
+                    android:id="@+id/item_dribbble_following_locationg_textView"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="2dp"
+                    android:text="Prague, Czech Republic"
+                    android:textSize="15sp" />
+
+
+                <TextView
+                    android:id="@+id/item_dribbble_following_bio_textView"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:padding="2dp"
+                    android:text="sdfjsldkfjslkdfjls"
+                    android:textColor="@color/colorPrimary" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <android.support.v7.widget.RecyclerView
+            android:visibility="visible"
+            android:id="@+id/item_dribbble_following_recyclerView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+    </LinearLayout>
+</android.support.v7.widget.CardView>

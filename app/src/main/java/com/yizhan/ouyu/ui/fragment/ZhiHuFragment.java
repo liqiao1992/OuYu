@@ -69,6 +69,7 @@ public class ZhiHuFragment extends BaseFragment implements SwipeRefreshLayout.On
         recyclerView = (RecyclerView) rootView.findViewById(R.id.fragment_zhihu_recyclerView);
         swipeRefreshLayout = (SwipeRefreshLayout) rootView.findViewById(R.id.fragment_zhihu_swipRefresh_layout);
         swipeRefreshLayout.setOnRefreshListener(this);
+        swipeRefreshLayout.setColorSchemeResources(R.color.colorAccent);
         recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
@@ -178,6 +179,7 @@ public class ZhiHuFragment extends BaseFragment implements SwipeRefreshLayout.On
 
     @Override
     public void onRefresh() {
+        adapter.clear();
         loadingLatestStory();
     }
 

@@ -124,7 +124,7 @@ public class RetrofitRxjavaService {
 
             OkHttpClient okHttpClient =builder.build();
 
-            Log.i("fuck", "返回client----------------------------------------------------------");
+//            Log.i("fuck", "返回client----------------------------------------------------------");
             return okHttpClient;
         } catch (Exception e) {
             throw new RuntimeException(e);

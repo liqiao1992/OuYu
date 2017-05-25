@@ -42,6 +42,10 @@ public abstract  class BaseRecyclerViewAdapter<T> extends RecyclerView.Adapter<R
         notifyDataSetChanged();
     }
 
+    public void clear(){
+        this.data.clear();
+    }
+
     public void setOnItemClickListener(OnItemClickListener onItemClickListener){
         this.onItemClickListener=onItemClickListener;
     }
