@@ -22,6 +22,7 @@ import com.bumptech.glide.manager.SupportRequestManagerFragment;
 import com.yizhan.ouyu.R;
 import com.yizhan.ouyu.adapter.BaseRecyclerViewAdapter;
 import com.yizhan.ouyu.adapter.ZhiHuFragmentAdapter;
+import com.yizhan.ouyu.api.RetrofitRxjavaApi;
 import com.yizhan.ouyu.api.RetrofitRxjavaService;
 import com.yizhan.ouyu.base.BaseActivity;
 import com.yizhan.ouyu.base.BaseFragment;
@@ -53,7 +54,9 @@ public class ZhiHuFragment extends BaseFragment implements SwipeRefreshLayout.On
     private ZhiHuFragmentAdapter adapter;
     private Banner banner;
     private List<ZhiHuTopStory> images = new ArrayList<>();
-
+    private RetrofitRxjavaApi retrofitRxjavaApi;
+    private boolean isLoading=false;
+    private int VISIBLE_LEFT_COUNT=4;//此值表示当RecyclerView滑动到距离底部还有几个View的时候准备加载更多
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -74,35 +77,25 @@ public class ZhiHuFragment extends BaseFragment implements SwipeRefreshLayout.On
             @Override
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
                 super.onScrolled(recyclerView, dx, dy);
+                int visibleChildCount=recyclerView.getChildCount();//这个是屏幕中所见的View的个数
+                int totalCount= recyclerView.getLayoutManager().getItemCount();//内部就是adapter.getItemCount
+                int firstVisiblePos=((LinearLayoutManager) recyclerView.getLayoutManager()).findFirstVisibleItemPosition();
+                Log.e("fuck","visibleChildCount:"+visibleChildCount+" totalCount:"+totalCount+" firstVisiblePos:"+firstVisiblePos);
+                if(!isLoading&&totalCount-firstVisiblePos-visibleChildCount<VISIBLE_LEFT_COUNT){
+                    Log.e("fuck","准备加载更多");
+                    isLoading = true;
+                    loadMoreStory();
+                }
+
             }
 
             @Override
             public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
                 super.onScrollStateChanged(recyclerView, newState);
                 int lastvisiblePos = ((LinearLayoutManager) recyclerView.getLayoutManager()).findLastVisibleItemPosition();
-                if (newState == RecyclerView.SCROLL_STATE_IDLE && lastvisiblePos + 1 == recyclerView.getAdapter().getItemCount()) {
-                    RetrofitRxjavaService.builder().ZhiHuLatestStoryApi().getZhiHuBeforeStory(date)
-                            .subscribeOn(Schedulers.io())
-                            .observeOn(AndroidSchedulers.mainThread())
-                            .subscribe(new Subscriber<ZhiHuLatestStory>() {
-                                @Override
-                                public void onCompleted() {
-
-                                }
-
-                                @Override
-                                public void onError(Throwable e) {
-                                    e.printStackTrace();
-                                }
-
-                                @Override
-                                public void onNext(ZhiHuLatestStory zhiHuLatestStory) {
-                                    System.out.print(zhiHuLatestStory.toString());
-                                    date = zhiHuLatestStory.getDate();
-                                    adapter.addDataList(zhiHuLatestStory.getStories());
-                                }
-                            });
-                }
+//                if (newState == RecyclerView.SCROLL_STATE_IDLE && lastvisiblePos + 1 == recyclerView.getAdapter().getItemCount()) {
+//                    loadMoreStory();
+//                }
             }
         });
 
@@ -120,6 +113,7 @@ public class ZhiHuFragment extends BaseFragment implements SwipeRefreshLayout.On
 
 
     private void initData() {
+        retrofitRxjavaApi= RetrofitRxjavaService.builder().ZhiHuLatestStoryApi();
         adapter = new ZhiHuFragmentAdapter(getContext());
         View headView = LayoutInflater.from(getContext()).inflate(R.layout.item_header_view, null);
         banner = (Banner) headView.findViewById(R.id.item_header_view_banner);
@@ -143,11 +137,40 @@ public class ZhiHuFragment extends BaseFragment implements SwipeRefreshLayout.On
         });
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         recyclerView.setAdapter(adapter);
+
         loadingLatestStory();
     }
 
+    private void loadMoreStory(){
+        Log.i("fuck","进入加载更多页面");
+        retrofitRxjavaApi.getZhiHuBeforeStory(date)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Subscriber<ZhiHuLatestStory>() {
+                    @Override
+                    public void onCompleted() {
+
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        e.printStackTrace();
+                        isLoading=false;
+                    }
+
+                    @Override
+                    public void onNext(ZhiHuLatestStory zhiHuLatestStory) {
+                        System.out.print(zhiHuLatestStory.toString());
+                        isLoading=false;
+                        date = zhiHuLatestStory.getDate();
+                        adapter.addDataList(zhiHuLatestStory.getStories());
+                    }
+                });
+    }
+
+
     private void loadingLatestStory() {
-        RetrofitRxjavaService.builder().ZhiHuLatestStoryApi().getZhiHuLatestStory()
+        retrofitRxjavaApi.getZhiHuLatestStory()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Subscriber<ZhiHuLatestStory>() {
@@ -171,7 +194,6 @@ public class ZhiHuFragment extends BaseFragment implements SwipeRefreshLayout.On
                         adapter.addDataList(zhiHuLatestStory.getStories());
                         images.clear();
                         images.addAll(zhiHuLatestStory.getTop_stories());
-                        Log.i("fuck","size:"+images.size());
                         banner.update(zhiHuLatestStory.getTop_stories());
                     }
                 });

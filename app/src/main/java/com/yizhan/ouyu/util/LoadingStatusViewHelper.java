@@ -29,18 +29,21 @@ public class LoadingStatusViewHelper {
         public Builder loadingView(int resource) {
             loadingView = LayoutInflater.from(mContext).inflate(resource, containerView, false);
             containerView.addView(loadingView);
+            loadingView.setVisibility(View.GONE);
             return this;
         }
 
         public Builder loadingErrorView(int resource) {
             loadingErrorView = LayoutInflater.from(mContext).inflate(resource, containerView, false);
             containerView.addView(loadingErrorView);
+            loadingErrorView.setVisibility(View.GONE);
             return this;
         }
 
         public Builder loadingEmptyView(int resource) {
             loadingEmptyView = LayoutInflater.from(mContext).inflate(resource, containerView, false);
             containerView.addView(loadingEmptyView);
+            loadingEmptyView.setVisibility(View.GONE);
             return this;
         }
 

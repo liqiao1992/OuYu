@@ -10,6 +10,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
 
 import com.yizhan.ouyu.R;
 import com.yizhan.ouyu.adapter.DribbbleFollowingFragmentAdapter;
@@ -18,6 +19,7 @@ import com.yizhan.ouyu.api.RetrofitRxjavaService;
 import com.yizhan.ouyu.base.BaseFragment;
 import com.yizhan.ouyu.entity.DribbbleFollowing;
 import com.yizhan.ouyu.entity.DribbbleShot;
+import com.yizhan.ouyu.util.LoadingStatusViewHelper;
 
 import java.util.List;
 
@@ -38,18 +40,31 @@ public class DribbbleFollowingFragment extends BaseFragment implements SwipeRefr
     private int per_page=3;
     private RetrofitRxjavaApi retrofitRxjavaApi;
     private  int page=1;
-
+    private FrameLayout loadingLl;
+    private LoadingStatusViewHelper loadingStatusViewHelper;
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
        View rootView=inflater.inflate(R.layout.fragment_dribbble_following,null);
         initUi(rootView);
-        initData();
+//        initData();
         return rootView;
+    }
+
+    @Override
+    public void onLazyInitView(@Nullable Bundle savedInstanceState) {
+        super.onLazyInitView(savedInstanceState);
+        loadingStatusViewHelper.showLoadingView();
+        initData();
     }
 
     private void initUi(View view){
         recyclerView= (RecyclerView) view.findViewById(R.id.fragment_dribbble_following_recyclerView);
+        loadingLl = (FrameLayout) view.findViewById(R.id.fragment_dribbble_following_container_frameLayout);
+        loadingStatusViewHelper = new LoadingStatusViewHelper.Builder(loadingLl, getContext())
+                .loadingView(R.layout.loading_layout)
+                .loadingErrorView(R.layout.loading_error_layout)
+                .build();
         recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
@@ -102,6 +117,14 @@ public class DribbbleFollowingFragment extends BaseFragment implements SwipeRefr
 
                     @Override
                     public void onNext(List<DribbbleFollowing> dribbbleFollowings) {
+                        if (page == 1) {
+                            if (loadingLl.getVisibility() == View.VISIBLE) {
+                                loadingLl.setVisibility(View.GONE);
+                            }
+                            if (swipeRefreshLayout.getVisibility() == View.GONE) {
+                                swipeRefreshLayout.setVisibility(View.VISIBLE);
+                            }
+                        }
                         if(page==1 && swipeRefreshLayout.isRefreshing()){
                             swipeRefreshLayout.setRefreshing(false);
                         }

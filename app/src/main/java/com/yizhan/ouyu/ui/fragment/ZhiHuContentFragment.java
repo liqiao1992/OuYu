@@ -5,10 +5,14 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.webkit.WebChromeClient;
+import android.webkit.WebResourceRequest;
 import android.webkit.WebView;
+import android.webkit.WebViewClient;
 import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
@@ -64,6 +68,16 @@ public class ZhiHuContentFragment extends BaseFragment {
 
     private void initUi(View rootView) {
         webView = (WebView) rootView.findViewById(R.id.fragment_zhihu_content_webview);
+
+       webView.setWebViewClient(new WebViewClient(){
+           @Override
+           public boolean shouldOverrideUrlLoading(WebView view, String url) {
+//               view.loadUrl(url);
+               Log.i("fuck","链接地址："+url);
+               start(AppWebViewFragment.newInstance(url));
+               return true;
+           }
+       });
         imageView = (ImageView) rootView.findViewById(R.id.fragment_zhihu_content_imageview);
         Toolbar toolbar= (Toolbar) rootView.findViewById(R.id.fragment_zhihu_content_toolbar);
         toolbar.setNavigationIcon(R.mipmap.ic_arrow_back_white_24dp);
