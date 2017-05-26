@@ -1,5 +1,7 @@
 package com.yizhan.ouyu.entity;
 
+import java.util.List;
+
 /**
  * Created by lenovo on 2017/5/25.
  */
@@ -15,6 +17,16 @@ public class DribbbleFollowing {
     private int id;
     private String created_at;
     private FolloweeBean followee;
+
+    private List<DribbbleShot> shots;
+
+    public List<DribbbleShot> getShots() {
+        return shots;
+    }
+
+    public void setShots(List<DribbbleShot> shots) {
+        this.shots = shots;
+    }
 
     public int getId() {
         return id;

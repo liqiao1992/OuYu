@@ -2,6 +2,7 @@ package com.yizhan.ouyu.adapter;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,6 +19,7 @@ import com.yizhan.ouyu.entity.DribbbleShot;
 
 public class DribbbleFollowingItemAdapter extends BaseRecyclerViewAdapter<DribbbleShot> {
 
+    private int userId;
     public DribbbleFollowingItemAdapter(Context mContext) {
         super(mContext);
     }
@@ -25,11 +27,26 @@ public class DribbbleFollowingItemAdapter extends BaseRecyclerViewAdapter<Dribbb
     @Override
     public RecyclerView.ViewHolder commonOnCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(mContext).inflate(R.layout.item_dribbble_following_recyclerview, null);
+
+        Log.v("fuck","********************************************");
+        Log.v("fuck","createViewHolder-------------------");
+        Log.v("fuck","********************************************");
+
         return new FollowingItemHolder(view);
+    }
+
+    public void setUserId(int userId){
+        this.userId=userId;
     }
 
     @Override
     public void commonOnBindViewHolder(RecyclerView.ViewHolder holder, int position) {
+
+        Log.v("fuck", "********************************************");
+        Log.v("fuck","userId:"+this.userId);
+        Log.v("fuck","position:"+position+",imageUrl:"+data.get(position).getImages().getNormal());
+        Log.v("fuck", "********************************************");
+        Log.v("fuck","                                         ");
         Glide.with(mContext)
                 .load(data.get(position).getImages().getNormal())
                 .diskCacheStrategy(DiskCacheStrategy.SOURCE)
