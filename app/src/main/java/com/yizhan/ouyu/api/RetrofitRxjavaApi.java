@@ -4,6 +4,7 @@ import com.yizhan.ouyu.app.Constant;
 import com.yizhan.ouyu.entity.DribbbleFollowing;
 import com.yizhan.ouyu.entity.DribbbleShot;
 import com.yizhan.ouyu.entity.DribbbleShotComment;
+import com.yizhan.ouyu.entity.KaiYanVideoList;
 import com.yizhan.ouyu.entity.ZhiHuLatestStory;
 import com.yizhan.ouyu.entity.ZhiHuStoryContent;
 
@@ -47,4 +48,8 @@ public interface RetrofitRxjavaApi {
     @Headers(Constant.DRIBBBLE_CLIENT_AUTH)
     @GET("users/{id}/shots")
     Observable<List<DribbbleShot>> getDribbbleShotByUserId(@Path("id") int id,@Query("page") int page,@Query("per_page") int per_page);
+
+    @GET("v4/tabs/selected")
+    Observable<KaiYanVideoList> getKaiYanVideo();
+
 }

@@ -9,6 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
@@ -47,9 +48,16 @@ public class DribbbleFollowingFragmentAdapter extends BaseRecyclerViewAdapter<Dr
     }
 
     @Override
+    public void onViewRecycled(RecyclerView.ViewHolder holder) {
+        super.onViewRecycled(holder);
+        Log.e("fuck", "recycle:" + holder.getAdapterPosition());
+    }
+
+    @Override
     public RecyclerView.ViewHolder commonOnCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(mContext).inflate(R.layout.item_dribbble_following_fragment, parent, false);
 //        View view = LayoutInflater.from(mContext).inflate(R.layout.item_dribbble_following_fragment, null); 这样会导致CardView match_parent 无效
+        Log.i("fuck","commonOnCreateViewHolder......................");
         return new DribbbleFollowingHolder(view);
     }
 
@@ -64,7 +72,9 @@ public class DribbbleFollowingFragmentAdapter extends BaseRecyclerViewAdapter<Dr
         ((DribbbleFollowingHolder) holder).locationTextView.setText(data.get(position).getFollowee().getLocation());
         ((DribbbleFollowingHolder) holder).bioTextView.setText(Html.fromHtml(data.get(position).getFollowee().getBio()));
 
+        Log.i("fuck", "commonOnBindViewHolder   position:" + position);
         if (shotDataMap.get(position) != null) {
+            Log.i("fuck", "该位置开始已经有了数据" + position);
             List<DribbbleShot> dribbbleShots = shotDataMap.get(position);
             for (int i = 0; i < dribbbleShots.size(); i++) {
                 Glide.with(mContext)
@@ -75,6 +85,7 @@ public class DribbbleFollowingFragmentAdapter extends BaseRecyclerViewAdapter<Dr
                         .into(((DribbbleFollowingHolder) holder).imageViewList.get(i));
             }
         } else {
+            Log.i("fuck", "该位置还没有数据" + position);
             for (ImageView imageView : ((DribbbleFollowingHolder) holder).imageViewList) {
                 imageView.setImageResource(R.drawable.image_place_loader);
             }
@@ -84,6 +95,7 @@ public class DribbbleFollowingFragmentAdapter extends BaseRecyclerViewAdapter<Dr
 
 
     private void loadShots(final DribbbleFollowingHolder holder, final int position) {
+        holder.linearLayout.setTag(data.get(position).getFollowee().getId());
         this.retrofitRxjavaApi.getDribbbleShotByUserId(data.get(position).getFollowee().getId(), 1, 3)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -100,17 +112,21 @@ public class DribbbleFollowingFragmentAdapter extends BaseRecyclerViewAdapter<Dr
 
                     @Override
                     public void onNext(List<DribbbleShot> dribbbleShots) {
-                        for (int i = 0; i < dribbbleShots.size(); i++) {
-                            Glide.with(mContext)
-                                    .load(dribbbleShots.get(i).getImages().getNormal())
-                                    .diskCacheStrategy(DiskCacheStrategy.SOURCE)
-                                    .centerCrop()
-                                    .into(holder.imageViewList.get(i));
-                        }
                         shotDataMap.put(position, dribbbleShots);
+                        Log.i("fuck", "-----------将数据放入位置：" + position);
+                        if ((int) holder.linearLayout.getTag() == data.get(position).getFollowee().getId()) {
+                            Log.i("fuck","djjdjjjd");
+                            for (int i = 0; i < dribbbleShots.size(); i++) {
+                                Glide.with(mContext)
+                                        .load(dribbbleShots.get(i).getImages().getNormal())
+                                        .diskCacheStrategy(DiskCacheStrategy.SOURCE)
+                                        .centerCrop()
+                                        .into(holder.imageViewList.get(i));
+                            }
+
+                        }
                     }
                 });
-
     }
 
     private class DribbbleFollowingHolder extends RecyclerView.ViewHolder {
@@ -119,9 +135,11 @@ public class DribbbleFollowingFragmentAdapter extends BaseRecyclerViewAdapter<Dr
         private TextView userNameTextView, locationTextView, bioTextView;
         private ImageView imageView1, imageView2, imageView3;
         private List<ImageView> imageViewList = new ArrayList<>();
+        private LinearLayout linearLayout;
 
         public DribbbleFollowingHolder(View itemView) {
             super(itemView);
+            linearLayout = (LinearLayout) itemView.findViewById(R.id.item_dribbble_following_fragment_linearLayout);
             imageView1 = (ImageView) itemView.findViewById(R.id.item_dribbble_following_shot_imageView1);
             imageView2 = (ImageView) itemView.findViewById(R.id.item_dribbble_following_shot_imageView2);
             imageView3 = (ImageView) itemView.findViewById(R.id.item_dribbble_following_shot_imageView3);

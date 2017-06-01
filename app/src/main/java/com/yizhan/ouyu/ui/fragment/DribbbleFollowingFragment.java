@@ -37,15 +37,18 @@ public class DribbbleFollowingFragment extends BaseFragment implements SwipeRefr
     private RecyclerView recyclerView;
     private SwipeRefreshLayout swipeRefreshLayout;
     private DribbbleFollowingFragmentAdapter adapter;
-    private int per_page=3;
+    private int per_page = 6;
     private RetrofitRxjavaApi retrofitRxjavaApi;
-    private  int page=1;
+    private int page = 1;
     private FrameLayout loadingLl;
     private LoadingStatusViewHelper loadingStatusViewHelper;
+    private boolean isLoading = false;
+    private int VISIBLE_LEFT_COUNT = 2;//此值表示当RecyclerView滑动到距离底部还有几个View的时候准备加载更多
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-       View rootView=inflater.inflate(R.layout.fragment_dribbble_following,null);
+        View rootView = inflater.inflate(R.layout.fragment_dribbble_following, null);
         initUi(rootView);
 //        initData();
         return rootView;
@@ -58,8 +61,8 @@ public class DribbbleFollowingFragment extends BaseFragment implements SwipeRefr
         initData();
     }
 
-    private void initUi(View view){
-        recyclerView= (RecyclerView) view.findViewById(R.id.fragment_dribbble_following_recyclerView);
+    private void initUi(View view) {
+        recyclerView = (RecyclerView) view.findViewById(R.id.fragment_dribbble_following_recyclerView);
         loadingLl = (FrameLayout) view.findViewById(R.id.fragment_dribbble_following_container_frameLayout);
         loadingStatusViewHelper = new LoadingStatusViewHelper.Builder(loadingLl, getContext())
                 .loadingView(R.layout.loading_layout)
@@ -69,28 +72,27 @@ public class DribbbleFollowingFragment extends BaseFragment implements SwipeRefr
             @Override
             public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
                 super.onScrollStateChanged(recyclerView, newState);
-                int position=((LinearLayoutManager)recyclerView.getLayoutManager()).findLastVisibleItemPosition();
-                if(newState==RecyclerView.SCROLL_STATE_IDLE&&position+1==recyclerView.getAdapter().getItemCount()){
-                    page++;
-                    Log.d("fuck","加载更多---------------------"+page);
-                    if(page>3){
-                        return;
-                    }
-                    loadingFollowing(page);
-                }
             }
 
             @Override
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
                 super.onScrolled(recyclerView, dx, dy);
+                int visibleChildCount = recyclerView.getChildCount();
+                int totalCount = recyclerView.getLayoutManager().getItemCount();
+                int firstVisiblePos = ((LinearLayoutManager) recyclerView.getLayoutManager()).findFirstVisibleItemPosition();
+                if (!isLoading && totalCount - visibleChildCount - firstVisiblePos < VISIBLE_LEFT_COUNT) {
+                    isLoading = true;
+                    page++;
+                    loadingFollowing(page);
+                }
             }
         });
-        swipeRefreshLayout= (SwipeRefreshLayout) view.findViewById(R.id.fragment_dribbble_following_swipRefresh_layout);
+        swipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.fragment_dribbble_following_swipRefresh_layout);
     }
 
-    private void initData(){
-        retrofitRxjavaApi= RetrofitRxjavaService.builder().DribbbleApi();
-        adapter=new DribbbleFollowingFragmentAdapter(getContext(),retrofitRxjavaApi);
+    private void initData() {
+        retrofitRxjavaApi = RetrofitRxjavaService.builder().DribbbleApi();
+        adapter = new DribbbleFollowingFragmentAdapter(getContext(), retrofitRxjavaApi);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         swipeRefreshLayout.setColorSchemeResources(R.color.colorAccent);
         swipeRefreshLayout.setOnRefreshListener(this);
@@ -100,23 +102,25 @@ public class DribbbleFollowingFragment extends BaseFragment implements SwipeRefr
         loadingFollowing(page);
     }
 
-    private void loadingFollowing(final int page){
-        retrofitRxjavaApi.getDribbbleFollowings(page,per_page)
+    private void loadingFollowing(final int page) {
+        retrofitRxjavaApi.getDribbbleFollowings(page, per_page)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Subscriber<List<DribbbleFollowing>>() {
                     @Override
                     public void onCompleted() {
-
                     }
 
                     @Override
                     public void onError(Throwable e) {
 
+                        e.printStackTrace();
+                        isLoading = false;
                     }
 
                     @Override
                     public void onNext(List<DribbbleFollowing> dribbbleFollowings) {
+
                         if (page == 1) {
                             if (loadingLl.getVisibility() == View.VISIBLE) {
                                 loadingLl.setVisibility(View.GONE);
@@ -125,10 +129,11 @@ public class DribbbleFollowingFragment extends BaseFragment implements SwipeRefr
                                 swipeRefreshLayout.setVisibility(View.VISIBLE);
                             }
                         }
-                        if(page==1 && swipeRefreshLayout.isRefreshing()){
+                        if (page == 1 && swipeRefreshLayout.isRefreshing()) {
                             swipeRefreshLayout.setRefreshing(false);
                         }
                         adapter.addDataList(dribbbleFollowings);
+                        isLoading = false;
                     }
                 });
 
@@ -137,7 +142,7 @@ public class DribbbleFollowingFragment extends BaseFragment implements SwipeRefr
 
     @Override
     public void onRefresh() {
-        page=1;
+        page = 1;
         adapter.clear();
         loadingFollowing(page);
     }

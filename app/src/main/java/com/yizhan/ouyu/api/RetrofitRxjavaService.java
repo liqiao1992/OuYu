@@ -74,64 +74,72 @@ public class RetrofitRxjavaService {
     public RetrofitRxjavaApi DribbbleApi() {
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(Constant.DRIBBBLE_API_URL)
-                .client(getUnsafeOkHttpClient())
+                .client(mOkHttpClient)
                 .addConverterFactory(GsonConverterFactory.create())
                 .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
                 .build();
         return retrofit.create(RetrofitRxjavaApi.class);
     }
 
+    public RetrofitRxjavaApi KaiYanApi(){
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(Constant.KAIYAN_API_URL)
+                .client(mOkHttpClient)
+                .addConverterFactory(GsonConverterFactory.create())
+                .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
+                .build();
+        return retrofit.create(RetrofitRxjavaApi.class);
+    }
 
     private static OkHttpClient getUnsafeOkHttpClient() {
-        try {
-            X509TrustManager trustManager;
-            SSLSocketFactory sslSocketFactory ;
+        X509TrustManager trustManager;
+        SSLSocketFactory sslSocketFactory;
+        trustManager = new X509TrustManager() {
+            @Override
+            public void checkClientTrusted(X509Certificate[] chain, String authType) throws CertificateException {
 
-            trustManager = new X509TrustManager() {
-                @Override
-                public void checkClientTrusted(X509Certificate[] chain, String authType) throws CertificateException {
-
-                }
-
-                @Override
-                public void checkServerTrusted(X509Certificate[] chain, String authType) throws CertificateException {
-
-                }
-
-                @Override
-                public X509Certificate[] getAcceptedIssuers() {
-                    return new X509Certificate[]{};
-                }
-            };
-
-            try {
-//                SSLContext sslContext;
-//                sslContext = SSLContext.getInstance("TLSv1");
-//                sslContext.init(null, new X509TrustManager[]{trustManager}, new SecureRandom());
-                sslSocketFactory = new SSLSocketFactoryCompat(trustManager);
-            } catch (Exception e) {
-                throw new RuntimeException(e);
             }
 
-            OkHttpClient.Builder builder = new OkHttpClient.Builder();
-            builder.sslSocketFactory(sslSocketFactory, trustManager);
-//            builder.hostnameVerifier(new HostnameVerifier() {
-//                @Override
-//                public boolean verify(String hostname, SSLSession session) {
-//                    return true;
-//                }
-//            });
+            @Override
+            public void checkServerTrusted(X509Certificate[] chain, String authType) throws CertificateException {
 
-            OkHttpClient okHttpClient =builder.build();
+            }
 
-//            Log.i("fuck", "返回client----------------------------------------------------------");
-            return okHttpClient;
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
+            @Override
+            public X509Certificate[] getAcceptedIssuers() {
+                return new X509Certificate[]{};
+            }
+        };
+
+
+        sslSocketFactory = new SSLSocketFactoryCompat(trustManager);
+        OkHttpClient.Builder builder = new OkHttpClient.Builder();
+        builder.sslSocketFactory(sslSocketFactory, trustManager);
+        OkHttpClient okHttpClient = builder.build();
+        return okHttpClient;
     }
 
     private void provideOkHttpClient() {
+        X509TrustManager trustManager;
+        SSLSocketFactory sslSocketFactory;
+        trustManager = new X509TrustManager() {
+            @Override
+            public void checkClientTrusted(X509Certificate[] chain, String authType) throws CertificateException {
+
+            }
+
+            @Override
+            public void checkServerTrusted(X509Certificate[] chain, String authType) throws CertificateException {
+
+            }
+
+            @Override
+            public X509Certificate[] getAcceptedIssuers() {
+                return new X509Certificate[]{};
+            }
+        };
+
+        sslSocketFactory = new SSLSocketFactoryCompat(trustManager);
         HttpLoggingInterceptor interceptor = new HttpLoggingInterceptor();
         interceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
         if (mOkHttpClient == null) {
@@ -146,6 +154,7 @@ public class RetrofitRxjavaService {
                             .addNetworkInterceptor(mRewriteCacheControlInterceptor)
                             .addInterceptor(interceptor)
                             .retryOnConnectionFailure(true)
+                            .sslSocketFactory(sslSocketFactory, trustManager)
                             .connectTimeout(15, TimeUnit.SECONDS)
                             .build();
                 }

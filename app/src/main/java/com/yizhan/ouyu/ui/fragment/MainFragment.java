@@ -32,11 +32,12 @@ public class MainFragment extends BaseFragment {
 //            loadRootFragment(R.id.fragment_main_container,new ZhiHuFragment());
             mFragments[FIRST] = new ZhiHuFragment();
             mFragments[SECOND] = new DribbbleFragment();
-            mFragments[THIRD] = new DribbbleFragment();
+            mFragments[THIRD] = new KaiYanFragment();
             loadMultipleRootFragment(R.id.fragment_main_container, FIRST, mFragments[FIRST], mFragments[SECOND],mFragments[THIRD]);
         } else {
             mFragments[FIRST] = findChildFragment(ZhiHuFragment.class);
             mFragments[SECOND] = findChildFragment(DribbbleFragment.class);
+            mFragments[THIRD]=findChildFragment(KaiYanFragment.class);
         }
         initUi(rootView);
         return rootView;

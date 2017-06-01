@@ -3,6 +3,7 @@ package com.yizhan.ouyu.ui.fragment;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -24,6 +25,7 @@ public class AppWebViewFragment extends BaseFragment {
     private ProgressBar progressBar;
     private String url;
     private WebView webView;
+    private Toolbar toolbar;
 
     public static AppWebViewFragment newInstance(String url){
         AppWebViewFragment appWebViewFragment=new AppWebViewFragment();
@@ -53,6 +55,13 @@ public class AppWebViewFragment extends BaseFragment {
     }
 
     private void initUi(View view){
+        toolbar= (Toolbar) view.findViewById(R.id.fragment_app_webview_toolbar);
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                _mActivity.onBackPressed();
+            }
+        });
         progressBar= (ProgressBar) view.findViewById(R.id.fragment_app_webview_progressBar);
         webView= (WebView) view.findViewById(R.id.fragment_app_webview);
         progressBar.setMax(100);
@@ -61,6 +70,7 @@ public class AppWebViewFragment extends BaseFragment {
 
     private void  initData(){
         webView.setWebViewClient(new WebViewClient(){
+
             @Override
             public boolean shouldOverrideUrlLoading(WebView view, String url) {
                 view.loadUrl(url);
@@ -82,12 +92,27 @@ public class AppWebViewFragment extends BaseFragment {
         });
         webView.setWebChromeClient(new WebChromeClient(){
             @Override
+            public void onReceivedTitle(WebView view, String title) {
+                super.onReceivedTitle(view, title);
+                Log.i("fuck",title);
+                toolbar.setTitle(title);
+            }
+
+            @Override
             public void onProgressChanged(WebView view, int newProgress) {
                 super.onProgressChanged(view, newProgress);
-                Log.e("fuck","progress:"+newProgress);
                 progressBar.setProgress(newProgress);
             }
         });
         webView.loadUrl(this.url);
+    }
+
+    @Override
+    public boolean onBackPressedSupport() {
+        if(webView.canGoBack()){
+            webView.goBack();
+            return true;
+        }
+        return super.onBackPressedSupport();
     }
 }
