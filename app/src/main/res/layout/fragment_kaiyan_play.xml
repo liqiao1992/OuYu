@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <FrameLayout
+        android:id="@+id/fragment_kaiyan_play_video_frameLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextureView
+            android:id="@+id/fragment_kaiyan_play_textureTextView"
+            android:layout_width="match_parent"
+            android:layout_height="200dp" />
+
+        <ProgressBar
+            android:id="@+id/fragment_kaiyan_play_progressBar"
+            style="@style/Widget.AppCompat.ProgressBar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center" />
+
+        <RelativeLayout
+            android:id="@+id/fragment_kaiyan_play_control_relativeLayout"
+            android:layout_width="match_parent"
+            android:layout_height="216dp"
+            android:visibility="gone">
+
+            <ImageButton
+
+                android:id="@+id/fragment_kaiyan_play_imageView_start"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_centerInParent="true"
+                android:background="@drawable/video_play" />
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/fragment_kaiyan_play_imageView_start"
+                android:gravity="center"
+                android:orientation="horizontal"
+                android:padding="5dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="3'20''"
+                    android:textColor="@android:color/white" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="/"
+                    android:textColor="@android:color/white" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="3'20''"
+                    android:textColor="@android:color/white" />
+            </LinearLayout>
+
+            <SeekBar
+                android:id="@+id/fragment_kaiyan_play_seekBar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:maxHeight="2dp"
+                android:minHeight="2dp"
+                android:padding="0dp"
+                android:paddingEnd="6dp"
+                android:paddingStart="6dp"
+                android:progressDrawable="@drawable/video_seekbar" />
+        </RelativeLayout>
+
+    </FrameLayout>
+
+    <android.support.v4.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="-16dp">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="sdfsdfsdfsdfffffffffffffffffffffffdsdfsfsdfsdfsfasdfsdfsdfdfsdsafsfasfsfasfsfasdsfasdsfsafsafsfsfsfasdfsfsfsfsfsfsdfsdfsdfsfasfasfa" />
+    </android.support.v4.widget.NestedScrollView>
+
+
+</LinearLayout>

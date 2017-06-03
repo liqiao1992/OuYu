@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
@@ -183,8 +184,14 @@ public class KaiYanFragmentAdapter extends BaseRecyclerViewAdapter<KaiYanVideo> 
             recyclerView = (RecyclerView) itemView.findViewById(R.id.item_fragment_kaiyan_video_with_cover_recyclerView);
             LinearLayoutManager llm = new LinearLayoutManager(mContext, LinearLayoutManager.HORIZONTAL, false);
             recyclerView.setLayoutManager(llm);
-            KaiYanFragmentRecyclerViewAdapter adapter = new KaiYanFragmentRecyclerViewAdapter(mContext);
+            final KaiYanFragmentRecyclerViewAdapter adapter = new KaiYanFragmentRecyclerViewAdapter(mContext);
             recyclerView.setAdapter(adapter);
+            adapter.setOnItemClickListener(new OnItemClickListener() {
+                @Override
+                public void onItemClick(int position) {
+                    Toast.makeText(mContext,adapter.getItem(position).getData().getTitle(),Toast.LENGTH_LONG).show();
+                }
+            });
         }
     }
 }

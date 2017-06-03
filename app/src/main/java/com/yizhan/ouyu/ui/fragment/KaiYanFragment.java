@@ -7,8 +7,11 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
+import android.widget.Toast;
 
 import com.yizhan.ouyu.R;
+import com.yizhan.ouyu.adapter.BaseRecyclerViewAdapter;
 import com.yizhan.ouyu.adapter.KaiYanFragmentAdapter;
 import com.yizhan.ouyu.api.RetrofitRxjavaApi;
 import com.yizhan.ouyu.api.RetrofitRxjavaService;
@@ -29,6 +32,7 @@ public class KaiYanFragment extends BaseFragment {
     private KaiYanFragmentAdapter adapter;
     private RetrofitRxjavaApi retrofitRxjavaApi;
 
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -40,11 +44,19 @@ public class KaiYanFragment extends BaseFragment {
 
     private void initUi(View view) {
         recyclerView = (RecyclerView) view.findViewById(R.id.fragment_kaiyan_recyclerView);
+
     }
 
     private void initData() {
         retrofitRxjavaApi = RetrofitRxjavaService.builder().KaiYanApi();
         adapter = new KaiYanFragmentAdapter(getContext());
+        adapter.setOnItemClickListener(new BaseRecyclerViewAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(int position) {
+                Toast.makeText(getContext(),adapter.getItem(position).getData().getTitle(),Toast.LENGTH_LONG).show();
+                ((BaseFragment)getParentFragment()).start(KaiYanPlayFragment.newInstance(adapter.getItem(position).getData().getPlayUrl(),adapter.getItem(position).getData().getDuration()));
+            }
+        });
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         recyclerView.setAdapter(adapter);
         loadData();
