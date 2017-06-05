@@ -1,6 +1,8 @@
 package com.yizhan.ouyu.adapter;
 
 import android.content.Context;
+import android.content.res.AssetManager;
+import android.graphics.Typeface;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -14,7 +16,9 @@ import android.widget.Toast;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.yizhan.ouyu.R;
+import com.yizhan.ouyu.base.BaseFragment;
 import com.yizhan.ouyu.entity.KaiYanVideo;
+import com.yizhan.ouyu.ui.fragment.KaiYanPlayFragment;
 import com.yizhan.ouyu.util.NetWorkUtil;
 
 import java.util.ArrayList;
@@ -34,6 +38,15 @@ public class KaiYanFragmentAdapter extends BaseRecyclerViewAdapter<KaiYanVideo> 
     private final static int TYPE_VIDEO_COLLECTION_WITH_COVER = 5;
     private final static int TYPE_VIDEO_COLLECTION_Of_FOLLOW = 6;
     private final static int TYPE_ERROR = -1;
+    private BaseFragment mFragment;
+    private Typeface textFont;
+
+    public KaiYanFragmentAdapter(Context mContext, BaseFragment mFragment) {
+        super(mContext);
+        this.mFragment = mFragment;
+        AssetManager assets = mContext.getAssets();
+        textFont = Typeface.createFromAsset(assets, "fonts/Lobster-1.4.otf");
+    }
 
     public KaiYanFragmentAdapter(Context mContext) {
         super(mContext);
@@ -91,6 +104,10 @@ public class KaiYanFragmentAdapter extends BaseRecyclerViewAdapter<KaiYanVideo> 
             ((KaiYanFragmentRecyclerViewAdapter) ((VideoWithCoverHolder) holder).recyclerView.getAdapter()).clear();
             ((KaiYanFragmentRecyclerViewAdapter) ((VideoWithCoverHolder) holder).recyclerView.getAdapter()).addDataList(data.get(position).getData().getItemList());
         } else if (type == TYPE_TEXT_HEADER) {
+            if(data.get(position).getData().getFont().equals("lobster")){
+                ((TextHolder) holder).textView.setTypeface(textFont);
+                ((TextHolder) holder).textView.setTextColor(mContext.getResources().getColor(android.R.color.black));
+            }
             ((TextHolder) holder).textView.setText(data.get(position).getData().getText());
         } else if (type == TYPE_VIDEO_COLLECTION_Of_FOLLOW) {
             Glide.with(mContext)
@@ -190,6 +207,7 @@ public class KaiYanFragmentAdapter extends BaseRecyclerViewAdapter<KaiYanVideo> 
                 @Override
                 public void onItemClick(int position) {
                     Toast.makeText(mContext,adapter.getItem(position).getData().getTitle(),Toast.LENGTH_LONG).show();
+                    mFragment.start(KaiYanPlayFragment.newInstance(adapter.getItem(position)));
                 }
             });
         }

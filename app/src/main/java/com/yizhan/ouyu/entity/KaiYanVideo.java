@@ -1,12 +1,16 @@
 package com.yizhan.ouyu.entity;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
+import java.util.ArrayList;
 import java.util.List;
 
 /**
  * Created by lenovo on 2017/6/1.
  */
 
-public class KaiYanVideo {
+public class KaiYanVideo implements Parcelable {
 
 
     /**
@@ -43,7 +47,7 @@ public class KaiYanVideo {
         this.tag = tag;
     }
 
-    public static class DataBean {
+    public static class DataBean implements Parcelable {
         /**
          * dataType : VideoBeanForClient
          * id : 18395
@@ -121,8 +125,7 @@ public class KaiYanVideo {
         private Object lastViewTime;
         private List<PlayInfoBean> playInfo;
         private List<TagsBean> tags;
-        private List<?> labelList;
-        private List<?> subtitles;
+
         private List<KaiYanVideo> itemList;
         private HeaderBean header;
 
@@ -449,23 +452,9 @@ public class KaiYanVideo {
             this.tags = tags;
         }
 
-        public List<?> getLabelList() {
-            return labelList;
-        }
 
-        public void setLabelList(List<?> labelList) {
-            this.labelList = labelList;
-        }
 
-        public List<?> getSubtitles() {
-            return subtitles;
-        }
-
-        public void setSubtitles(List<?> subtitles) {
-            this.subtitles = subtitles;
-        }
-
-        public static class ProviderBean {
+        public static class ProviderBean implements Parcelable {
             /**
              * name : Vimeo
              * alias : vimeo
@@ -499,9 +488,42 @@ public class KaiYanVideo {
             public void setIcon(String icon) {
                 this.icon = icon;
             }
+
+            @Override
+            public int describeContents() {
+                return 0;
+            }
+
+            @Override
+            public void writeToParcel(Parcel dest, int flags) {
+                dest.writeString(this.name);
+                dest.writeString(this.alias);
+                dest.writeString(this.icon);
+            }
+
+            public ProviderBean() {
+            }
+
+            protected ProviderBean(Parcel in) {
+                this.name = in.readString();
+                this.alias = in.readString();
+                this.icon = in.readString();
+            }
+
+            public static final Parcelable.Creator<ProviderBean> CREATOR = new Parcelable.Creator<ProviderBean>() {
+                @Override
+                public ProviderBean createFromParcel(Parcel source) {
+                    return new ProviderBean(source);
+                }
+
+                @Override
+                public ProviderBean[] newArray(int size) {
+                    return new ProviderBean[size];
+                }
+            };
         }
 
-        public static class CoverBean {
+        public static class CoverBean implements Parcelable {
             /**
              * feed : http://img.kaiyanapp.com/6cb07ededf5f5814f6765a6c642473e0.jpeg?imageMogr2/quality/60/format/jpg
              * detail : http://img.kaiyanapp.com/6cb07ededf5f5814f6765a6c642473e0.jpeg?imageMogr2/quality/60/format/jpg
@@ -555,9 +577,46 @@ public class KaiYanVideo {
             public void setHomepage(String homepage) {
                 this.homepage = homepage;
             }
+
+            @Override
+            public int describeContents() {
+                return 0;
+            }
+
+            @Override
+            public void writeToParcel(Parcel dest, int flags) {
+                dest.writeString(this.feed);
+                dest.writeString(this.detail);
+                dest.writeString(this.blurred);
+                dest.writeParcelable((Parcelable) this.sharing, flags);
+                dest.writeString(this.homepage);
+            }
+
+            public CoverBean() {
+            }
+
+            protected CoverBean(Parcel in) {
+                this.feed = in.readString();
+                this.detail = in.readString();
+                this.blurred = in.readString();
+                this.sharing = in.readParcelable(Object.class.getClassLoader());
+                this.homepage = in.readString();
+            }
+
+            public static final Parcelable.Creator<CoverBean> CREATOR = new Parcelable.Creator<CoverBean>() {
+                @Override
+                public CoverBean createFromParcel(Parcel source) {
+                    return new CoverBean(source);
+                }
+
+                @Override
+                public CoverBean[] newArray(int size) {
+                    return new CoverBean[size];
+                }
+            };
         }
 
-        public static class WebUrlBean {
+        public static class WebUrlBean implements Parcelable {
             /**
              * raw : http://www.eyepetizer.net/detail.html?vid=18395
              * forWeibo : http://wandou.im/3mloet
@@ -581,9 +640,40 @@ public class KaiYanVideo {
             public void setForWeibo(String forWeibo) {
                 this.forWeibo = forWeibo;
             }
+
+            @Override
+            public int describeContents() {
+                return 0;
+            }
+
+            @Override
+            public void writeToParcel(Parcel dest, int flags) {
+                dest.writeString(this.raw);
+                dest.writeString(this.forWeibo);
+            }
+
+            public WebUrlBean() {
+            }
+
+            protected WebUrlBean(Parcel in) {
+                this.raw = in.readString();
+                this.forWeibo = in.readString();
+            }
+
+            public static final Parcelable.Creator<WebUrlBean> CREATOR = new Parcelable.Creator<WebUrlBean>() {
+                @Override
+                public WebUrlBean createFromParcel(Parcel source) {
+                    return new WebUrlBean(source);
+                }
+
+                @Override
+                public WebUrlBean[] newArray(int size) {
+                    return new WebUrlBean[size];
+                }
+            };
         }
 
-        public static class ConsumptionBean {
+        public static class ConsumptionBean implements Parcelable {
             /**
              * collectionCount : 27
              * shareCount : 27
@@ -617,9 +707,42 @@ public class KaiYanVideo {
             public void setReplyCount(int replyCount) {
                 this.replyCount = replyCount;
             }
+
+            @Override
+            public int describeContents() {
+                return 0;
+            }
+
+            @Override
+            public void writeToParcel(Parcel dest, int flags) {
+                dest.writeInt(this.collectionCount);
+                dest.writeInt(this.shareCount);
+                dest.writeInt(this.replyCount);
+            }
+
+            public ConsumptionBean() {
+            }
+
+            protected ConsumptionBean(Parcel in) {
+                this.collectionCount = in.readInt();
+                this.shareCount = in.readInt();
+                this.replyCount = in.readInt();
+            }
+
+            public static final Parcelable.Creator<ConsumptionBean> CREATOR = new Parcelable.Creator<ConsumptionBean>() {
+                @Override
+                public ConsumptionBean createFromParcel(Parcel source) {
+                    return new ConsumptionBean(source);
+                }
+
+                @Override
+                public ConsumptionBean[] newArray(int size) {
+                    return new ConsumptionBean[size];
+                }
+            };
         }
 
-        public static class PlayInfoBean {
+        public static class PlayInfoBean implements Parcelable {
             /**
              * height : 480
              * width : 854
@@ -684,12 +807,13 @@ public class KaiYanVideo {
                 this.urlList = urlList;
             }
 
-            public static class UrlListBean {
+            public static class UrlListBean implements Parcelable {
                 /**
                  * name : ucloud
                  * url : http://baobab.kaiyanapp.com/api/v1/playUrl?vid=18395&editionType=normal&source=ucloud
                  * size : 10228507
                  */
+
 
                 private String name;
                 private String url;
@@ -718,10 +842,82 @@ public class KaiYanVideo {
                 public void setSize(int size) {
                     this.size = size;
                 }
+
+                @Override
+                public int describeContents() {
+                    return 0;
+                }
+
+                @Override
+                public void writeToParcel(Parcel dest, int flags) {
+                    dest.writeString(this.name);
+                    dest.writeString(this.url);
+                    dest.writeInt(this.size);
+                }
+
+                public UrlListBean() {
+                }
+
+                protected UrlListBean(Parcel in) {
+                    this.name = in.readString();
+                    this.url = in.readString();
+                    this.size = in.readInt();
+                }
+
+                public static final Parcelable.Creator<UrlListBean> CREATOR = new Parcelable.Creator<UrlListBean>() {
+                    @Override
+                    public UrlListBean createFromParcel(Parcel source) {
+                        return new UrlListBean(source);
+                    }
+
+                    @Override
+                    public UrlListBean[] newArray(int size) {
+                        return new UrlListBean[size];
+                    }
+                };
             }
+
+            @Override
+            public int describeContents() {
+                return 0;
+            }
+
+            @Override
+            public void writeToParcel(Parcel dest, int flags) {
+                dest.writeInt(this.height);
+                dest.writeInt(this.width);
+                dest.writeString(this.name);
+                dest.writeString(this.type);
+                dest.writeString(this.url);
+                dest.writeTypedList(this.urlList);
+            }
+
+            public PlayInfoBean() {
+            }
+
+            protected PlayInfoBean(Parcel in) {
+                this.height = in.readInt();
+                this.width = in.readInt();
+                this.name = in.readString();
+                this.type = in.readString();
+                this.url = in.readString();
+                this.urlList = in.createTypedArrayList(UrlListBean.CREATOR);
+            }
+
+            public static final Parcelable.Creator<PlayInfoBean> CREATOR = new Parcelable.Creator<PlayInfoBean>() {
+                @Override
+                public PlayInfoBean createFromParcel(Parcel source) {
+                    return new PlayInfoBean(source);
+                }
+
+                @Override
+                public PlayInfoBean[] newArray(int size) {
+                    return new PlayInfoBean[size];
+                }
+            };
         }
 
-        public static class TagsBean {
+        public static class TagsBean implements Parcelable {
             /**
              * id : 16
              * name : 广告
@@ -765,9 +961,44 @@ public class KaiYanVideo {
             public void setAdTrack(Object adTrack) {
                 this.adTrack = adTrack;
             }
+
+            @Override
+            public int describeContents() {
+                return 0;
+            }
+
+            @Override
+            public void writeToParcel(Parcel dest, int flags) {
+                dest.writeInt(this.id);
+                dest.writeString(this.name);
+                dest.writeString(this.actionUrl);
+                dest.writeParcelable((Parcelable) this.adTrack, flags);
+            }
+
+            public TagsBean() {
+            }
+
+            protected TagsBean(Parcel in) {
+                this.id = in.readInt();
+                this.name = in.readString();
+                this.actionUrl = in.readString();
+                this.adTrack = in.readParcelable(Object.class.getClassLoader());
+            }
+
+            public static final Parcelable.Creator<TagsBean> CREATOR = new Parcelable.Creator<TagsBean>() {
+                @Override
+                public TagsBean createFromParcel(Parcel source) {
+                    return new TagsBean(source);
+                }
+
+                @Override
+                public TagsBean[] newArray(int size) {
+                    return new TagsBean[size];
+                }
+            };
         }
 
-        public static class HeaderBean{
+        public static class HeaderBean implements Parcelable {
 
             /**
              * id : 157
@@ -861,7 +1092,7 @@ public class KaiYanVideo {
                 this.labelList = labelList;
             }
 
-            public static class LabelBean {
+            public static class LabelBean implements Parcelable {
                 /**
                  * text :
                  * card :
@@ -895,9 +1126,42 @@ public class KaiYanVideo {
                 public void setDetail(Object detail) {
                     this.detail = detail;
                 }
+
+                @Override
+                public int describeContents() {
+                    return 0;
+                }
+
+                @Override
+                public void writeToParcel(Parcel dest, int flags) {
+                    dest.writeString(this.text);
+                    dest.writeString(this.card);
+                    dest.writeParcelable((Parcelable) this.detail, flags);
+                }
+
+                public LabelBean() {
+                }
+
+                protected LabelBean(Parcel in) {
+                    this.text = in.readString();
+                    this.card = in.readString();
+                    this.detail = in.readParcelable(Object.class.getClassLoader());
+                }
+
+                public static final Parcelable.Creator<LabelBean> CREATOR = new Parcelable.Creator<LabelBean>() {
+                    @Override
+                    public LabelBean createFromParcel(Parcel source) {
+                        return new LabelBean(source);
+                    }
+
+                    @Override
+                    public LabelBean[] newArray(int size) {
+                        return new LabelBean[size];
+                    }
+                };
             }
 
-            public static class LabelListBean {
+            public static class LabelListBean implements Parcelable {
                 /**
                  * text :
                  * actionUrl : null
@@ -905,6 +1169,7 @@ public class KaiYanVideo {
 
                 private String text;
                 private Object actionUrl;
+
 
                 public String getText() {
                     return text;
@@ -921,8 +1186,225 @@ public class KaiYanVideo {
                 public void setActionUrl(Object actionUrl) {
                     this.actionUrl = actionUrl;
                 }
+
+                @Override
+                public int describeContents() {
+                    return 0;
+                }
+
+                @Override
+                public void writeToParcel(Parcel dest, int flags) {
+                    dest.writeString(this.text);
+                    dest.writeParcelable((Parcelable) this.actionUrl, flags);
+                }
+
+                public LabelListBean() {
+                }
+
+                protected LabelListBean(Parcel in) {
+                    this.text = in.readString();
+                    this.actionUrl = in.readParcelable(Object.class.getClassLoader());
+                }
+
+                public static final Parcelable.Creator<LabelListBean> CREATOR = new Parcelable.Creator<LabelListBean>() {
+                    @Override
+                    public LabelListBean createFromParcel(Parcel source) {
+                        return new LabelListBean(source);
+                    }
+
+                    @Override
+                    public LabelListBean[] newArray(int size) {
+                        return new LabelListBean[size];
+                    }
+                };
             }
+
+            @Override
+            public int describeContents() {
+                return 0;
+            }
+
+            @Override
+            public void writeToParcel(Parcel dest, int flags) {
+                dest.writeInt(this.id);
+                dest.writeString(this.title);
+                dest.writeString(this.font);
+                dest.writeString(this.cover);
+                dest.writeParcelable(this.label, flags);
+                dest.writeString(this.actionUrl);
+                dest.writeTypedList(this.labelList);
+                dest.writeString(this.description);
+                dest.writeStringList(this.iconList);
+            }
+
+            public HeaderBean() {
+            }
+
+            protected HeaderBean(Parcel in) {
+                this.id = in.readInt();
+                this.title = in.readString();
+                this.font = in.readString();
+                this.cover = in.readString();
+                this.label = in.readParcelable(LabelBean.class.getClassLoader());
+                this.actionUrl = in.readString();
+                this.labelList = in.createTypedArrayList(LabelListBean.CREATOR);
+                this.description = in.readString();
+                this.iconList = in.createStringArrayList();
+            }
+
+            public static final Parcelable.Creator<HeaderBean> CREATOR = new Parcelable.Creator<HeaderBean>() {
+                @Override
+                public HeaderBean createFromParcel(Parcel source) {
+                    return new HeaderBean(source);
+                }
+
+                @Override
+                public HeaderBean[] newArray(int size) {
+                    return new HeaderBean[size];
+                }
+            };
         }
 
+        @Override
+        public int describeContents() {
+            return 0;
+        }
+
+        @Override
+        public void writeToParcel(Parcel dest, int flags) {
+            dest.writeString(this.dataType);
+            dest.writeInt(this.id);
+            dest.writeString(this.title);
+            dest.writeString(this.slogan);
+            dest.writeString(this.description);
+            dest.writeParcelable(this.provider, flags);
+            dest.writeString(this.category);
+            dest.writeParcelable((Parcelable) this.author, flags);
+            dest.writeParcelable(this.cover, flags);
+            dest.writeString(this.playUrl);
+            dest.writeString(this.thumbPlayUrl);
+            dest.writeInt(this.duration);
+            dest.writeParcelable(this.webUrl, flags);
+            dest.writeLong(this.releaseTime);
+            dest.writeString(this.library);
+            dest.writeParcelable(this.consumption, flags);
+            dest.writeParcelable((Parcelable) this.campaign, flags);
+            dest.writeParcelable((Parcelable) this.waterMarks, flags);
+            dest.writeParcelable((Parcelable) this.adTrack, flags);
+            dest.writeString(this.type);
+            dest.writeParcelable((Parcelable) this.titlePgc, flags);
+            dest.writeParcelable((Parcelable) this.descriptionPgc, flags);
+            dest.writeString(this.remark);
+            dest.writeInt(this.idx);
+            dest.writeParcelable((Parcelable) this.shareAdTrack, flags);
+            dest.writeParcelable((Parcelable) this.favoriteAdTrack, flags);
+            dest.writeParcelable((Parcelable) this.webAdTrack, flags);
+            dest.writeLong(this.date);
+            dest.writeParcelable((Parcelable) this.promotion, flags);
+            dest.writeParcelable((Parcelable) this.label, flags);
+            dest.writeString(this.descriptionEditor);
+            dest.writeByte(this.collected ? (byte) 1 : (byte) 0);
+            dest.writeByte(this.played ? (byte) 1 : (byte) 0);
+            dest.writeParcelable((Parcelable) this.lastViewTime, flags);
+            dest.writeTypedList(this.playInfo);
+            dest.writeTypedList(this.tags);
+
+            dest.writeList(this.itemList);
+            dest.writeParcelable(this.header, flags);
+            dest.writeString(this.text);
+            dest.writeString(this.font);
+        }
+
+        public DataBean() {
+        }
+
+        protected DataBean(Parcel in) {
+            this.dataType = in.readString();
+            this.id = in.readInt();
+            this.title = in.readString();
+            this.slogan = in.readString();
+            this.description = in.readString();
+            this.provider = in.readParcelable(ProviderBean.class.getClassLoader());
+            this.category = in.readString();
+            this.author = in.readParcelable(Object.class.getClassLoader());
+            this.cover = in.readParcelable(CoverBean.class.getClassLoader());
+            this.playUrl = in.readString();
+            this.thumbPlayUrl = in.readString();
+            this.duration = in.readInt();
+            this.webUrl = in.readParcelable(WebUrlBean.class.getClassLoader());
+            this.releaseTime = in.readLong();
+            this.library = in.readString();
+            this.consumption = in.readParcelable(ConsumptionBean.class.getClassLoader());
+            this.campaign = in.readParcelable(Object.class.getClassLoader());
+            this.waterMarks = in.readParcelable(Object.class.getClassLoader());
+            this.adTrack = in.readParcelable(Object.class.getClassLoader());
+            this.type = in.readString();
+            this.titlePgc = in.readParcelable(Object.class.getClassLoader());
+            this.descriptionPgc = in.readParcelable(Object.class.getClassLoader());
+            this.remark = in.readString();
+            this.idx = in.readInt();
+            this.shareAdTrack = in.readParcelable(Object.class.getClassLoader());
+            this.favoriteAdTrack = in.readParcelable(Object.class.getClassLoader());
+            this.webAdTrack = in.readParcelable(Object.class.getClassLoader());
+            this.date = in.readLong();
+            this.promotion = in.readParcelable(Object.class.getClassLoader());
+            this.label = in.readParcelable(Object.class.getClassLoader());
+            this.descriptionEditor = in.readString();
+            this.collected = in.readByte() != 0;
+            this.played = in.readByte() != 0;
+            this.lastViewTime = in.readParcelable(Object.class.getClassLoader());
+            this.playInfo = in.createTypedArrayList(PlayInfoBean.CREATOR);
+            this.tags = in.createTypedArrayList(TagsBean.CREATOR);
+            this.itemList = new ArrayList<KaiYanVideo>();
+            in.readList(this.itemList, KaiYanVideo.class.getClassLoader());
+            this.header = in.readParcelable(HeaderBean.class.getClassLoader());
+            this.text = in.readString();
+            this.font = in.readString();
+        }
+
+        public static final Parcelable.Creator<DataBean> CREATOR = new Parcelable.Creator<DataBean>() {
+            @Override
+            public DataBean createFromParcel(Parcel source) {
+                return new DataBean(source);
+            }
+
+            @Override
+            public DataBean[] newArray(int size) {
+                return new DataBean[size];
+            }
+        };
     }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(this.type);
+        dest.writeParcelable(this.data, flags);
+        dest.writeString(this.tag);
+    }
+
+    public KaiYanVideo() {
+    }
+
+    protected KaiYanVideo(Parcel in) {
+        this.type = in.readString();
+        this.data = in.readParcelable(DataBean.class.getClassLoader());
+        this.tag = in.readString();
+    }
+
+    public static final Parcelable.Creator<KaiYanVideo> CREATOR = new Parcelable.Creator<KaiYanVideo>() {
+        @Override
+        public KaiYanVideo createFromParcel(Parcel source) {
+            return new KaiYanVideo(source);
+        }
+
+        @Override
+        public KaiYanVideo[] newArray(int size) {
+            return new KaiYanVideo[size];
+        }
+    };
 }

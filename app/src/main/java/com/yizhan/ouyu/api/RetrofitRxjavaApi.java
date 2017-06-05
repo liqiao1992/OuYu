@@ -52,4 +52,7 @@ public interface RetrofitRxjavaApi {
     @GET("v4/tabs/selected")
     Observable<KaiYanVideoList> getKaiYanVideo();
 
+    @GET("v4/video/related")
+    Observable<KaiYanVideoList> getKaiYanRelatedVideo(@Query("id") int id);
+
 }

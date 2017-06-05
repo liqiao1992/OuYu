@@ -14,8 +14,8 @@ import java.util.List;
 
 public abstract class BaseRecyclerViewAdapter<T> extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
-    private final static int TYPE_NORMAL = 0;
-    private final static int TYPE_HEADER = 1;
+    protected final static int TYPE_NORMAL = 0;
+    protected final static int TYPE_HEADER = 1;
     private View mHeaderView;
     public List<T> data = new ArrayList<>();
 

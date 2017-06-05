@@ -49,12 +49,12 @@ public class KaiYanFragment extends BaseFragment {
 
     private void initData() {
         retrofitRxjavaApi = RetrofitRxjavaService.builder().KaiYanApi();
-        adapter = new KaiYanFragmentAdapter(getContext());
+        adapter = new KaiYanFragmentAdapter(getContext(),((BaseFragment)getParentFragment()));
         adapter.setOnItemClickListener(new BaseRecyclerViewAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(int position) {
                 Toast.makeText(getContext(),adapter.getItem(position).getData().getTitle(),Toast.LENGTH_LONG).show();
-                ((BaseFragment)getParentFragment()).start(KaiYanPlayFragment.newInstance(adapter.getItem(position).getData().getPlayUrl(),adapter.getItem(position).getData().getDuration()));
+                ((BaseFragment)getParentFragment()).start(KaiYanPlayFragment.newInstance(adapter.getItem(position)));
             }
         });
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
