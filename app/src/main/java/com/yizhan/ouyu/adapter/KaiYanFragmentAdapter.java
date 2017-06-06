@@ -38,6 +38,7 @@ public class KaiYanFragmentAdapter extends BaseRecyclerViewAdapter<KaiYanVideo> 
     private final static int TYPE_VIDEO_COLLECTION_WITH_COVER = 5;
     private final static int TYPE_VIDEO_COLLECTION_Of_FOLLOW = 6;
     private final static int TYPE_ERROR = -1;
+    private final static int TYPE_BANNER = 7;
     private BaseFragment mFragment;
     private Typeface textFont;
 
@@ -66,9 +67,12 @@ public class KaiYanFragmentAdapter extends BaseRecyclerViewAdapter<KaiYanVideo> 
         } else if (viewType == TYPE_TEXT_HEADER) {
             View textView = LayoutInflater.from(mContext).inflate(R.layout.item_fragment_kaiyan_text, parent, false);
             return new TextHolder(textView);
-        } else {
+        } else if (viewType == TYPE_VIDEO_COLLECTION_Of_FOLLOW) {
             View videoWithCoverView = LayoutInflater.from(mContext).inflate(R.layout.item_fragment_kaiyan_video_with_cover, parent, false);
             return new VideoWithCoverHolder(videoWithCoverView);
+        } else {
+            View videoView = LayoutInflater.from(mContext).inflate(R.layout.item_fragment_kaiyan_video, parent, false);
+            return new VideoHolder(videoView);
         }
 
     }
@@ -104,7 +108,7 @@ public class KaiYanFragmentAdapter extends BaseRecyclerViewAdapter<KaiYanVideo> 
             ((KaiYanFragmentRecyclerViewAdapter) ((VideoWithCoverHolder) holder).recyclerView.getAdapter()).clear();
             ((KaiYanFragmentRecyclerViewAdapter) ((VideoWithCoverHolder) holder).recyclerView.getAdapter()).addDataList(data.get(position).getData().getItemList());
         } else if (type == TYPE_TEXT_HEADER) {
-            if(data.get(position).getData().getFont().equals("lobster")){
+            if (data.get(position).getData().getFont().equals("lobster")) {
                 ((TextHolder) holder).textView.setTypeface(textFont);
                 ((TextHolder) holder).textView.setTextColor(mContext.getResources().getColor(android.R.color.black));
             }
@@ -131,6 +135,16 @@ public class KaiYanFragmentAdapter extends BaseRecyclerViewAdapter<KaiYanVideo> 
 
             ((KaiYanFragmentRecyclerViewAdapter) ((VideoWithCoverHolder) holder).recyclerView.getAdapter()).clear();
             ((KaiYanFragmentRecyclerViewAdapter) ((VideoWithCoverHolder) holder).recyclerView.getAdapter()).addDataList(data.get(position).getData().getItemList());
+        }else if(type==TYPE_BANNER){
+            Glide.with(mContext)
+                    .load(data.get(position).getData().getImage())
+                    .diskCacheStrategy(DiskCacheStrategy.SOURCE)
+                    .centerCrop()
+                    .into(((VideoHolder) holder).imageView);
+            ((VideoHolder) holder).titleTv.setVisibility(View.GONE);
+            ((VideoHolder) holder).categoryTv.setVisibility(View.GONE);
+            ((VideoHolder) holder).durationTv.setVisibility(View.GONE);
+            ((VideoHolder) holder).dividerTv.setVisibility(View.GONE);
         }
     }
 
@@ -147,6 +161,8 @@ public class KaiYanFragmentAdapter extends BaseRecyclerViewAdapter<KaiYanVideo> 
             return TYPE_TEXT_FOOTER;
         } else if (data.get(position).getType().equals("videoCollectionWithCover")) {
             return TYPE_VIDEO_COLLECTION_WITH_COVER;
+        } else if (data.get(position).getType().equals("banner2")) {
+            return TYPE_BANNER;
         } else {
             return TYPE_ERROR;
         }
@@ -155,10 +171,11 @@ public class KaiYanFragmentAdapter extends BaseRecyclerViewAdapter<KaiYanVideo> 
     private class VideoHolder extends RecyclerView.ViewHolder {
 
         private ImageView imageView;
-        private TextView titleTv, categoryTv, durationTv;
+        private TextView titleTv, categoryTv, durationTv,dividerTv;
 
         public VideoHolder(View itemView) {
             super(itemView);
+            dividerTv= (TextView) itemView.findViewById(R.id.item_fragment_kaiyan_video_divider_textView);
             imageView = (ImageView) itemView.findViewById(R.id.item_fragment_kaiyan_video_imageView);
             titleTv = (TextView) itemView.findViewById(R.id.item_fragment_kaiyan_video_title_textView);
             categoryTv = (TextView) itemView.findViewById(R.id.item_fragment_kaiyan_video_category_textView);
@@ -206,7 +223,7 @@ public class KaiYanFragmentAdapter extends BaseRecyclerViewAdapter<KaiYanVideo> 
             adapter.setOnItemClickListener(new OnItemClickListener() {
                 @Override
                 public void onItemClick(int position) {
-                    Toast.makeText(mContext,adapter.getItem(position).getData().getTitle(),Toast.LENGTH_LONG).show();
+                    Toast.makeText(mContext, adapter.getItem(position).getData().getTitle(), Toast.LENGTH_LONG).show();
                     mFragment.start(KaiYanPlayFragment.newInstance(adapter.getItem(position)));
                 }
             });

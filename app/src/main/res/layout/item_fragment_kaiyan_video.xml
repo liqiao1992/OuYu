@@ -47,6 +47,7 @@
                 android:text="#广告" />
 
             <TextView
+                android:id="@+id/item_fragment_kaiyan_video_divider_textView"
                 android:textColor="@android:color/white"
                 android:padding="5dp"
                 android:layout_width="wrap_content"

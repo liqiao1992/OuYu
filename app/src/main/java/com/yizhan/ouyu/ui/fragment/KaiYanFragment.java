@@ -53,8 +53,9 @@ public class KaiYanFragment extends BaseFragment {
         adapter.setOnItemClickListener(new BaseRecyclerViewAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(int position) {
-                Toast.makeText(getContext(),adapter.getItem(position).getData().getTitle(),Toast.LENGTH_LONG).show();
-                ((BaseFragment)getParentFragment()).start(KaiYanPlayFragment.newInstance(adapter.getItem(position)));
+                if(adapter.getItem(position).getType().equals("video")) {
+                    ((BaseFragment) getParentFragment()).start(KaiYanPlayFragment.newInstance(adapter.getItem(position)));
+                }
             }
         });
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));

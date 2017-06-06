@@ -105,6 +105,9 @@ public class KaiYanPlayFragment extends BaseFragment implements TextureView.Surf
             if (controlRelativeLayout.getVisibility() == View.VISIBLE) {
                 controlRelativeLayout.setVisibility(View.INVISIBLE);
             }
+            if(seekBar.getVisibility()==View.VISIBLE){
+                seekBar.setVisibility(View.INVISIBLE);
+            }
         }
     };
 
@@ -146,6 +149,7 @@ public class KaiYanPlayFragment extends BaseFragment implements TextureView.Surf
                     case MotionEvent.ACTION_DOWN:
                         handler.removeCallbacks(controlViewRunnable);
                         controlRelativeLayout.setVisibility(View.VISIBLE);
+                        seekBar.setVisibility(View.VISIBLE);
                         break;
                     case MotionEvent.ACTION_UP:
                         Log.i("fuck", "手指抬起来了。。。。。。。。。。。。。。。");

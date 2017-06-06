@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
@@ -29,8 +29,8 @@
         <RelativeLayout
             android:id="@+id/fragment_kaiyan_play_control_relativeLayout"
             android:layout_width="match_parent"
-            android:layout_height="216dp"
-            android:visibility="visible">
+            android:layout_height="match_parent"
+            android:visibility="gone">
 
             <ImageButton
 
@@ -68,28 +68,30 @@
                     android:textColor="@android:color/white" />
             </LinearLayout>
 
-            <SeekBar
-                android:id="@+id/fragment_kaiyan_play_seekBar"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_alignParentBottom="true"
-                android:background="@android:color/transparent"
-                android:maxHeight="2dp"
-                android:minHeight="2dp"
-                android:padding="0dp"
-                android:paddingEnd="6dp"
-                android:paddingStart="6dp"
-                android:progressDrawable="@drawable/video_seekbar" />
+
         </RelativeLayout>
 
     </FrameLayout>
 
 
     <android.support.v7.widget.RecyclerView
+        android:background="@drawable/bg"
         android:id="@+id/fragment_kaiyan_play_recyclerView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginTop="-16dp"
-        android:background="@drawable/bg" />
+        android:layout_marginTop="200dp" />
 
-</LinearLayout>
+    <SeekBar
+        android:visibility="visible"
+        android:id="@+id/fragment_kaiyan_play_seekBar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="192dp"
+        android:background="@android:color/transparent"
+        android:maxHeight="2dp"
+        android:minHeight="2dp"
+        android:padding="0dp"
+        android:thumbOffset="0dp"
+        android:thumb="@drawable/seekbar_thumb"
+        android:progressDrawable="@drawable/video_seekbar" />
+</FrameLayout>
